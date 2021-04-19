@@ -1,6 +1,6 @@
-# PyZuneCatalogServer
+# PyZuneImageCatalogServer
 
-This repository houses a community effort to recreate the Zune Marketplace servers.
+This repository houses a community effort to recreate the Zune Marketplace image servers.
 
 ## Contributing
 
