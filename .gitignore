@@ -93,3 +93,6 @@ ENV/
 .vscode/
 .azure/
 .idea/
+
+# App secrets
+*.key
