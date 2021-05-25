@@ -16,6 +16,22 @@ caa_supported_sizes = [250, 500, 1200]
 musicbrainzngs.set_useragent("Zune", "4.8", "https://github.com/yoshiask/PyZuneImageCatalogServer")
 
 
+import re
+@app.after_request
+def allow_zunestk_cors(response):
+    r: str = request.origin
+    print(r)
+    if re.match(r"https?://(127\.0\.0\.(?:\d*)|localhost(?:\:\d+)?|(?:\w*\.)*zunes\.tk)", r):
+        response.headers.add('Access-Control-Allow-Origin', r)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Headers', 'Cache-Control')
+        response.headers.add('Access-Control-Allow-Headers', 'X-Requested-With')
+        response.headers.add('Access-Control-Allow-Headers', 'Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+    return response
+
+
 @app.route(f"/v3.2/<string:locale>/image/<string:mbid>")
 def get_image(mbid: str, locale: str):
     # The Cover Art Archive API supports sizes of 250, 500, and 1200
