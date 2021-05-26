@@ -19,8 +19,9 @@ musicbrainzngs.set_useragent("Zune", "4.8", "https://github.com/yoshiask/PyZuneI
 import re
 @app.after_request
 def allow_zunestk_cors(response):
-    r: str = request.origin
-    print(r)
+    r = request.origin
+    if r is None:
+        return response
     if re.match(r"https?://(127\.0\.0\.(?:\d*)|localhost(?:\:\d+)?|(?:\w*\.)*zunes\.tk)", r):
         response.headers.add('Access-Control-Allow-Origin', r)
         response.headers.add('Access-Control-Allow-Credentials', 'true')
