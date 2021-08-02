@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request, Response, abort
+from flask import Flask, request, Response, abort, send_file
 import urllib.request
 from urllib.error import HTTPError
 
@@ -44,7 +44,7 @@ def get_image(mbid: str, locale: str):
         image = urllib.request.urlopen(f"http://coverartarchive.org/release/{mbid}/front-{width}")
         return Response(image.read(), mimetype="image/jpeg")
     except urllib.error.HTTPError as error:
-        abort(error.code)
+        return send_file('noart.png', attachment_filename='noart.png')
 
 
 @app.route("/v3.2/<string:locale>/music/artist/<string:mbid>/primaryImage")
@@ -77,4 +77,4 @@ def get_artist_primary_image(mbid: str, locale: str):
 
 
 if __name__ == "__main__":
-    app.run(port=80)
+    app.run(host="127.0.0.1", port=80)
