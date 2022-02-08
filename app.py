@@ -33,6 +33,11 @@ def allow_zunestk_cors(response):
     return response
 
 
+@app.route("/")
+def default():
+    return Response("Welcome to the Social", mimetype="text/plain")
+
+
 @app.route(f"/v3.2/<string:locale>/image/<string:mbid>")
 def get_image(mbid: str, locale: str):
     # The Cover Art Archive API supports sizes of 250, 500, and 1200
