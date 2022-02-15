@@ -96,3 +96,4 @@ ENV/
 
 # App secrets
 *.key
+/secrets.py
