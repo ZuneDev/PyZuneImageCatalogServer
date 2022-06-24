@@ -1,6 +1,7 @@
 import requests
 from requests import RequestException, Response
 import urllib.error
+import urllib.request
 import musicbrainzngs
 from musicbrainzngs.musicbrainz import ResponseError
 from secrets import *
@@ -44,7 +45,8 @@ def get_artist_from_mbobj(mbobj: dict) -> Union[int, dict]:
         return 404
     discogs_link: str = discogs_rel[0]["target"].replace("www", "api").replace("artist", "artists")
     try:
-        response = urllib.request.urlopen(discogs_link)
+        req = urllib.request.Request(discogs_link, headers=DC_HEADERS)
+        response = urllib.request.urlopen(req)
     except urllib.error.HTTPError as error:
         return error.code
 

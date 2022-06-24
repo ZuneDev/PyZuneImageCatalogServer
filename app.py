@@ -1,7 +1,7 @@
 import json
 
 from typing import Dict, List
-from flask import Flask, request, Response, abort, send_file
+from flask import Flask, request, Response, abort, send_file, redirect
 from io import BytesIO
 import requests
 from requests import RequestException
@@ -68,15 +68,22 @@ def get_image(mbid: str, locale: str):
         # The Cover Art Archive API supports sizes of 250, 500, and 1200
         requested_width = request.args.get("width", default=500, type=int)
         width = min(caa_supported_sizes, key=lambda x: abs(x - requested_width))
-        image_url = f"http://coverartarchive.org/release/{mbid}/front-{width}"
+        image_url = f"https://coverartarchive.org/release/{mbid}/front-{width}"
 
     # Request the image from the API and forward it to the Zune software
-    try:
-        image = requests.get(image_url, headers=DEFAULT_HEADERS, stream=True)
-        return Response(BytesIO(image.content), content_type="image/jpeg")
-    except RequestException as error:
-        return send_file('noart.png', attachment_filename='noart.png')
+    return redirect(image_url, 302)
+
+
+@app.route(f"/v3.2/<string:locale>/music/artist/<string:mbid>/<string:type>")
+def get_artist_image(mbid: str, type: str, locale: str):
+    dc_artist, mb_artist = discogs.get_artist_from_mbid(mbid)
+
+    # Get URL for requested image
+    image_url: str = dc_artist["images"][0]["uri"]
+
+    # Request the image from the API and forward it to the Zune software
+    return redirect(image_url, 302)
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=80)
+    app.run(host="127.0.0.4", port=80)
